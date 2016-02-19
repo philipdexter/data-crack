@@ -1,0 +1,40 @@
+name:                data-crack
+version:             0.1.0.0
+synopsis:            Data cracking for averagely fast range queries
+description:         Please see README.md
+homepage:            http://github.com/philipdexter/data-crack#README.md
+license:             MIT
+license-file:        LICENSE
+author:              Philip Dexter
+maintainer:          philip.dexter@gmail.com
+copyright:           2016 Philip Dexter
+category:            Data
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  ghc-options:         -Wall
+  exposed-modules:     Data.Crack
+  build-depends:       base >= 4.7 && < 5
+                     , vector
+  default-language:    Haskell2010
+
+test-suite data-crack-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , data-crack
+                     , test-framework
+                     , QuickCheck
+                     , test-framework-quickcheck2
+                     , HUnit
+                     , test-framework-hunit
+                     , vector
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/philipdexter/data-crack
