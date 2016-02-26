@@ -16,15 +16,15 @@ module Data.Crack
 
 import qualified Data.Vector.Unboxed as V
 
-data Cracked = CPred !Pred !Cracked !Cracked
+data Cracked = CPred {-# UNPACK #-} !Pred !Cracked !Cracked
              | C !(V.Vector Int)
                deriving (Show, Eq)
 
 data Range = Range !Int !Int
              deriving Show
 
-data Pred = LessEqual !Int
-            deriving (Show, Eq)
+newtype Pred = LessEqual Int
+    deriving (Show, Eq)
 
 _getV :: Cracked -> V.Vector Int
 _getV (C v) = v
