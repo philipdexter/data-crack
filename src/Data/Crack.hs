@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE OverloadedLists #-}
 
 module Data.Crack
 ( Cracked
@@ -52,17 +53,12 @@ query ran@(Range !low !high) !crack =
                   crack'          = CPred (LessEqual low) (C lower) (C higher)
               in (crack', middle)
       CPred (LessEqual !le) !vlow !vhigh ->
-          if low > le then
-              let (!down_right, !res) = query ran vhigh
-              in (CPred (LessEqual le) vlow down_right, res)
-          else
-              if high <= le then
-                  let (!down_left, !res) = query ran vlow
-                  in (CPred (LessEqual le) down_left vhigh, res)
-              else
-                  let (!down_left, !res) = query ran vlow
-                      (!down_right, !res') = query ran vhigh
-                  in (CPred (LessEqual le) down_left down_right, res V.++ res')
+          let (!down_right, !right_res) = if low > le || high > le then query ran vhigh else (vhigh, [])
+              (!down_left, !left_res) = if low > le then (vlow, []) else query ran vlow
+          in (CPred (LessEqual le) down_left down_right, qapp left_res right_res)
+        where qapp [] !r = r
+              qapp !l [] = l
+              qapp !l !r = l V.++ r
 
 elem :: Int -> Cracked -> Bool
 elem i = not . V.null . snd . query (Range (i-1) (i+1))
